@@ -22,7 +22,7 @@ Role Variables
 Dependencies
 ------------
 
-    isset.package
+    hyperized.package
 
 Example Playbook
 ----------------
