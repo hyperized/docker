@@ -1,0 +1,26 @@
+---
+galaxy_info:
+  author: Gerben Geijteman
+  description: Ubuntu Docker installer
+  company: Hyperized.net
+  license: MIT
+  min_ansible_version: 2.5
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+  galaxy_tags:
+    - docker
+dependencies:
+  - role: hyperized.package
+    package_name: apt-transport-https
+    package_state: "{{ docker_state }}"
+  - role: hyperized.package
+    package_name: ca-certificates
+    package_state: "{{ docker_state }}"
+  - role: hyperized.package
+    package_name: curl
+    package_state: "{{ docker_state }}"
+  - role: hyperized.package
+    package_name: software-properties-common
+    package_state: "{{ docker_state }}"

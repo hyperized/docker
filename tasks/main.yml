@@ -1,0 +1,39 @@
+---
+- name: ensure docker apt key
+  apt_key:
+    url: "{{ docker_key_url }}"
+    id: "{{ docker_key_id }}"
+    state: "{{ docker_state }}"
+
+- name: ensure docker apt repository
+  apt_repository:
+    repo: "{{ docker_repo }}"
+    filename: "{{ docker_repo_filename }}"
+    state: "{{ docker_state }}"
+
+- name: ensure docker
+  apt:
+    package: "{{ docker_package }}"
+    update_cache: yes
+    state: "{{ docker_state }}"
+    purge: yes
+    autoremove: yes
+
+- name: ensure template directory exists
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: ensure daemon config
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  notify: restart docker
+  when:
+    - docker_state == 'present'
+
+- name: clean up daemon.json if required
+  file:
+    path: /etc/docker/daemon.json
+  when:
+    - docker_state == 'absent'

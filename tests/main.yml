@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  become: yes
+  roles:
+    - hyperized.docker
+
+  tasks:
+    - command: docker --version
+      register: dockert
+
+    - assert:
+        that:
+          - '"Docker version" in dockert.stdout'
+
+- hosts: localhost
+  become: yes
+  roles:
+    - role: hyperized.docker
+      vars:
+        docker_state: absent
+
+  tasks:
+    - command: docker --version
+      register: dockert
+      ignore_errors: True
+      changed_when: false
+
+    - assert:
+        that:
+          - dockert.failed == True
