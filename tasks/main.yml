@@ -24,7 +24,8 @@
     path: /etc/docker
     state: directory
 
-- block: docker does not manage iptables
+- name: docker does not manage iptables
+  block:
 
   - name: ensure user service override directory is present
     file:
@@ -46,7 +47,8 @@
   when:
     - not docker_iptables
 
-- block: docker manages iptables
+- name: docker manages iptables
+  block:
 
     - name: ensure user service override is absent
       file:
