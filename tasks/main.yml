@@ -24,16 +24,53 @@
     path: /etc/docker
     state: directory
 
+- block: docker does not manage iptables
+
+  - name: ensure user service override directory is present
+    file:
+      path: "{{ docker_user_service_path }}"
+      owner: root
+      group: root
+      mode: '0755'
+    notify: restart docker
+
+  - name: ensure user service override is present
+    copy:
+      src: noiptables.conf
+      dest: "{{ docker_user_service_path }}/{{ docker_iptables_service_file }}"
+      owner: root
+      group: root
+      mode: '0644'
+    notify: restart docker
+
+  when:
+    - not docker_iptables
+
+- block: docker manages iptables
+
+    - name: ensure user service override is absent
+      file:
+        path: "{{ docker_user_service_path }}/{{ docker_iptables_service_file }}"
+        state: absent
+
+    - name: ensure user service override directory is absent
+      file:
+        path: "{{ docker_user_service_path }}"
+        state: absent
+
+  when:
+    - (docker_iptables) or (docker_state == 'absent')
+
 - name: ensure daemon config
   template:
     src: daemon.json.j2
-    dest: /etc/docker/daemon.json
+    dest: "{{ docker_daemon_path }}"
   notify: restart docker
   when:
     - docker_state == 'present'
 
 - name: clean up daemon.json if required
   file:
-    path: /etc/docker/daemon.json
+    path: "{{ docker_daemon_path }}"
   when:
     - docker_state == 'absent'

@@ -5,4 +5,10 @@ docker_key_id: "0EBFCD88"
 docker_package: docker-ce
 docker_repo_filename: docker
 docker_repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+
 docker_daemon: '{}'
+docker_daemon_path: /etc/docker/daemon.json
+
+docker_iptables: true
+docker_iptables_service_file: noiptables.conf
+docker_user_service_path: /etc/systemd/system/docker.service.d
