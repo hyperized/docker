@@ -33,7 +33,9 @@
       owner: root
       group: root
       mode: '0755'
-    notify: restart docker
+    notify:
+      - reload systemd
+      - restart docker
 
   - name: ensure user service override is present
     copy:
@@ -42,7 +44,9 @@
       owner: root
       group: root
       mode: '0644'
-    notify: restart docker
+    notify:
+      - reload systemd
+      - restart docker
 
   when:
     - not docker_iptables
